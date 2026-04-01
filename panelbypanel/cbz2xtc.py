@@ -781,15 +781,46 @@ def optimize_image(img_data, output_path_base, page_num, suffix="", overlap_perc
             panels = extract_panels(uncropped_img, is_rtl=is_rtl, method=method, model_path=PANEL_MODEL)
             if panels:
                 print(f"  Found {len(panels)} panels.")
-                for i, panel_img in enumerate(panels):
-                    # Auto-rotate wide panels to portrait if not disabled
-                    pw, ph = panel_img.size
-                    if not NO_ROTATE_PANELS and pw > ph:
-                        panel_img = panel_img.rotate(-90, expand=True)
+                if len(panels) == 1:
+                    # Split single panel into 3 overlapping thirds
+                    panel_img = panels[0]
+                    width, height = panel_img.size
+                    overlap_percent = MANHWA_OVERLAP / 100.0
+                    segment_height = height // 3
+                    overlap_amount = int(segment_height * overlap_percent)
+                    
+                    for i in range(3):
+                        if i == 0:
+                            top = 0
+                            bottom = segment_height + overlap_amount
+                        elif i == 1:
+                            top = segment_height - overlap_amount
+                            bottom = 2 * segment_height + overlap_amount
+                        elif i == 2:
+                            top = 2 * segment_height - overlap_amount
+                            bottom = height
                         
-                    # Output the cropped panel
-                    output_panel = output_path_base.parent / f"{page_num:04d}{suffix}_p{i+1:02d}.png"
-                    save_with_padding(panel_img, output_panel, padcolor=PADDING_COLOR)
+                        top = max(0, top)
+                        bottom = min(height, bottom)
+                        
+                        split_panel = panel_img.crop((0, top, width, bottom))
+                        
+                        pw, ph = split_panel.size
+                        if not NO_ROTATE_PANELS and pw > ph:
+                            split_panel = split_panel.rotate(-90, expand=True)
+                        
+                        output_panel = output_path_base.parent / f"{page_num:04d}{suffix}_p{i+1:02d}.png"
+                        save_with_padding(split_panel, output_panel, padcolor=PADDING_COLOR)
+                else:
+                    for i, panel_img in enumerate(panels):
+                        # Auto-rotate wide panels to portrait if not disabled
+                        pw, ph = panel_img.size
+                        if not NO_ROTATE_PANELS and pw > ph:
+                            panel_img = panel_img.rotate(-90, expand=True)
+                            
+                        # Output the cropped panel
+                        output_panel = output_path_base.parent / f"{page_num:04d}{suffix}_p{i+1:02d}.png"
+                        save_with_padding(panel_img, output_panel, padcolor=PADDING_COLOR)
                 return 0
             else:
                 print(f"  No panels detected for page {page_num}, falling back to standard processing.")
@@ -1642,6 +1673,7 @@ def main():
         print("Warning: --panel is set but dependencies or module 'panel viewer int' not found. Panel detection disabled.")
         PANEL_EXTRACT = False
     MANHWA_OVERLAP = 40
+    LANDSCAPE_PAGE_SPLIT = 'none'
     if RTL:
         LANDSCAPE_PAGE_SPLIT = 'rtl'
         
