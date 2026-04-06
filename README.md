@@ -27,12 +27,18 @@ Then run pip install -r requirements.txt
 Place your PDF or CBZ files in the main folder.
 Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
 
+`--2bit` will add higher resolution xtch files 
+
 ### Method 1: OpenCV (Default)
 
 Fast contour-based detection using traditional computer vision. No extra model files are needed.
 
 ```bash
 ./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --rtl
+```
+or try
+```bash
+python3 cbz2xtc.py --dither zhoufang --downscale lanczos --panel --rtl --2bit
 ```
 
 ### Method 2: YOLO (High Accuracy)
@@ -42,6 +48,9 @@ AI-based detection using YOLO. This requires a model file.
 ```bash
 ./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
 ```
+or
+
+
 
 ## Advanced Options
 
