@@ -1,0 +1,7 @@
+pillow
+numpy
+opencv-python
+ultralytics
+requests
+pymupdf
+numba

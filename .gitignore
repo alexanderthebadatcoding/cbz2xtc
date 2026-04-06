@@ -3,3 +3,7 @@ panelbypanel/.DS_Store
 /panelbypanel/__pycache__
 .DS_Store
 *.pdf
+/.temp_png
+*.cbz
+/xtc_output
+/__pycache__
