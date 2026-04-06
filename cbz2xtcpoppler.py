@@ -34,6 +34,20 @@ from PIL import Image, ImageOps, ImageDraw, ImageFont
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 
+# Try to import panel detection module
+try:
+    # Case 1: Running from root as a package
+    from panel_viewer_int.detection import extract_panels
+    import cv2
+except ImportError:
+    try:
+        # Case 2: Running from within 'panel viewer int' as a sibling
+        from detection import extract_panels
+        import cv2
+    except ImportError:
+        extract_panels = None
+        cv2 = None
+
 
 # Configuration
 TARGET_WIDTH = 480
@@ -45,6 +59,8 @@ DITHER_ALGO = "stucki"    # "floyd", "ordered", "rasterize", "none", "atkinson",
 DOWNSCALE_FILTER = Image.Resampling.BICUBIC # Default downscaling filter
 GAMMA_VALUE = 1.0        # Gamma correction value (1.0 = neutral)
 INVERT_COLORS = False    # Invert colors (White <-> Black)
+PANEL_EXTRACT = False    # Detect and extract individual panels
+PANEL_MODEL = None       # Path or keyword for panel detection model
 
 # Dithering options mapping
 DITHER_MAP = {
@@ -759,6 +775,57 @@ def optimize_image(img_data, output_path_base, page_num, suffix="", overlap_perc
         # Low standard deviation means the image is mostly one color.
         img_arr = np.array(img)
         is_solid = np.std(img_arr) < 5.0
+
+        if PANEL_EXTRACT and not is_solid and extract_panels:
+            is_rtl = RTL or (LANDSCAPE_PAGE_SPLIT == 'rtl')
+            method = "yolo" if PANEL_MODEL else "opencv"
+            print(f"  Extracting panels for page {page_num} (method: {method}, rtl: {is_rtl})...")
+            panels = extract_panels(uncropped_img, is_rtl=is_rtl, method=method, model_path=PANEL_MODEL)
+            if panels:
+                print(f"  Found {len(panels)} panels.")
+                if len(panels) == 1:
+                    # Split single panel into 3 overlapping thirds
+                    panel_img = panels[0]
+                    width, height = panel_img.size
+                    overlap_percent = MANHWA_OVERLAP / 100.0
+                    segment_height = height // 3
+                    overlap_amount = int(segment_height * overlap_percent)
+                    
+                    for i in range(3):
+                        if i == 0:
+                            top = 0
+                            bottom = segment_height + overlap_amount
+                        elif i == 1:
+                            top = segment_height - overlap_amount
+                            bottom = 2 * segment_height + overlap_amount
+                        elif i == 2:
+                            top = 2 * segment_height - overlap_amount
+                            bottom = height
+                        
+                        top = max(0, top)
+                        bottom = min(height, bottom)
+                        
+                        split_panel = panel_img.crop((0, top, width, bottom))
+                        
+                        pw, ph = split_panel.size
+                        if not NO_ROTATE_PANELS and pw > ph:
+                            split_panel = split_panel.rotate(-90, expand=True)
+                        
+                        output_panel = output_path_base.parent / f"{page_num:04d}{suffix}_p{i+1:02d}.png"
+                        save_with_padding(split_panel, output_panel, padcolor=PADDING_COLOR)
+                else:
+                    for i, panel_img in enumerate(panels):
+                        # Auto-rotate wide panels to portrait if not disabled
+                        pw, ph = panel_img.size
+                        if not NO_ROTATE_PANELS and pw > ph:
+                            panel_img = panel_img.rotate(-90, expand=True)
+                            
+                        # Output the cropped panel
+                        output_panel = output_path_base.parent / f"{page_num:04d}{suffix}_p{i+1:02d}.png"
+                        save_with_padding(panel_img, output_panel, padcolor=PADDING_COLOR)
+                return 0
+            else:
+                print(f"  No panels detected for page {page_num}, falling back to standard processing.")
 
         #crop margins in percentage. 
         if MARGIN:
@@ -1558,6 +1625,10 @@ def main():
         print("\n  --sample-set <pagenum> ...  Build a spread of contrast samples.")
         print("\n  --landscape-page-split <none|ltr|rtl>   Split wide pages (default: none).")
         print("\n  --manhwa <overlap-percent>  Process as long-strip webtoon. Optionally set overlap percentage (default 40). Example: --manhwa 50")
+        print("\n  --panel       Detect and extract individual panels from each page.")
+        print("\n  --panel-model <path|manga109>  Specify detection model. Using 'manga109' enables YOLOv8 logic.")
+        print("\n  --rtl         Use Right-to-Left reading order for landscape splits and panel sorting.")
+        print("\n  --no-rotate-panels  Don't automatically rotate wide panels to portrait.")
         print("\n  --clean       Automatically delete temporary PNG files after conversion.")
         print("\n  --compress    Compress output using LZ4 into an .xtcz file.")
         print("\n  --help, -h    Show this help message")
@@ -1596,6 +1667,10 @@ def main():
     global MANHWA
     global MANHWA_OVERLAP
     global COMPRESS
+    global PANEL_EXTRACT
+    global PANEL_MODEL
+    global RTL
+    global NO_ROTATE_PANELS
 
     # New globals
     global XTC_MODE
@@ -1609,9 +1684,26 @@ def main():
     INVERT_COLORS = "--invert" in sys.argv
     MANHWA = "--manhwa" in sys.argv
     COMPRESS = "--compress" in sys.argv
+    PANEL_EXTRACT = "--panel" in sys.argv
+    RTL = "--rtl" in sys.argv
+    NO_ROTATE_PANELS = "--no-rotate-panels" in sys.argv
+    PANEL_MODEL = None
+    if "--panel-model" in sys.argv:
+        try:
+            idx = sys.argv.index("--panel-model")
+            if idx + 1 < len(sys.argv) and not sys.argv[idx+1].startswith("--"):
+                PANEL_MODEL = sys.argv[idx + 1]
+        except (ValueError, IndexError):
+            pass
+
+    if PANEL_EXTRACT and extract_panels is None:
+        print("Warning: --panel is set but dependencies or module 'panel viewer int' not found. Panel detection disabled.")
+        PANEL_EXTRACT = False
     MANHWA_OVERLAP = 40
     LANDSCAPE_PAGE_SPLIT = 'none'
-
+    if RTL:
+        LANDSCAPE_PAGE_SPLIT = 'rtl'
+        
     if "--landscape-page-split" in sys.argv:
         try:
             idx = sys.argv.index("--landscape-page-split")
@@ -1710,8 +1802,8 @@ def main():
     while i < len(sys.argv):
         arg = sys.argv[i]
         # Skip value args we already handled or boolean args
-        if arg in ["--dither", "--2bit", "--no-dither", "--clean", "--overlap", "--split-all", "--pad-black", "--include-overviews", "--sideways-overviews", "--gamma", "--invert", "--downscale", "--compress", "--landscape-page-split"]:
-            if arg == "--dither" or arg == "--gamma" or arg == "--downscale" or arg == "--landscape-page-split":
+        if arg in ["--dither", "--2bit", "--no-dither", "--clean", "--overlap", "--split-all", "--pad-black", "--include-overviews", "--sideways-overviews", "--gamma", "--invert", "--downscale", "--compress", "--landscape-page-split", "--panel", "--panel-model", "--rtl", "--no-rotate-panels"]:
+            if arg == "--dither" or arg == "--gamma" or arg == "--downscale" or arg == "--landscape-page-split" or arg == "--panel-model":
                  i += 1 # skip value
             # booleans are already handled
         elif arg == "--split-spreads":
