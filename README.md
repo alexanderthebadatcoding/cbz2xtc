@@ -1,22 +1,44 @@
 ## Installation
 
 Install the required Python libraries:
+
 ```bash
 pip install pillow numpy opencv-python ultralytics requests pymupdf numba
 ```
 
-## Usage
+You can also try
 
+```bash
+pip install -r requirements.txt
+```
+
+If you have issues on mac try:
+
+```bash
+brew install pillow numpy opencv-python ultralytics requests pymupdf numba
+```
+
+(Optional) If you encounter any issues with pip install, you might want to:
+
+First, ensure you have Python and pip installed. Then consider using a virtual environment: python -m venv venv && source venv/bin/activate
+Then run pip install -r requirements.txt
+
+## Usage
+Place your PDF or CBZ files in the main folder.
 Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
 
 ### Method 1: OpenCV (Default)
+
 Fast contour-based detection using traditional computer vision. No extra model files are needed.
+
 ```bash
 ./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --rtl
 ```
 
 ### Method 2: YOLO (High Accuracy)
+
 AI-based detection using YOLO. This requires a model file.
+
 ```bash
 ./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
 ```
@@ -30,3 +52,5 @@ AI-based detection using YOLO. This requires a model file.
 
 You can find pre-trained YOLO manga panel detection models on **[Hugging Face](https://huggingface.co/models?search=manga+panel+detection)**.
 Search for `manga panel detection` and download the `.pt` file (YOLOv8 format).
+
+This is based on code from [srokl cbz2xtc](https://github.com/srokl/cbz2xtc)
