@@ -18,10 +18,17 @@ If you have issues on mac try:
 brew install pillow numpy opencv-python ultralytics requests pymupdf numba
 ```
 
-(Optional) If you encounter any issues with pip install, you might want to:
+### (Optional) If you encounter any issues with pip install:
 
-First, ensure you have Python and pip installed. Then consider using a virtual environment: python -m venv venv && source venv/bin/activate
-Then run pip install -r requirements.txt
+First, ensure you have Python and pip installed.
+Then consider using a virtual environment:
+```bash
+python -m venv venv && source venv/bin/activate
+```
+Then run
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage
 Place your PDF or CBZ files in the main folder.
