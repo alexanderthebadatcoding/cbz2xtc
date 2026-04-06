@@ -31,7 +31,8 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-Place your PDF or CBZ files in the main folder.
+Place your PDF or CBZ files in the main folder. It will detect them and create an export folder.
+
 Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
 
 `--2bit` will add higher resolution xtch files 
