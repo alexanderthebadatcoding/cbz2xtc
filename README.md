@@ -1,6 +1,7 @@
 # XTEink Manga Tools 
 
-A comprehensive suite of tools for converting various media formats (CBZ, PDF, images, webpages, and videos) into the highly optimized XTC/XTCH format specifically designed for the XTEink X4 e-reader.
+A comprehensive suite of tools for converting various media formats (CBZ, PDF, and images) into the highly optimized XTC/XTCH format specifically designed for the XTEink X4 e-reader.
+If you have images of the comics or manga you can zip the folder snd change thr extension from .zip to .cbz
 
 These tools are designed to maximize the reading experience on e-ink displays by offering advanced dithering, efficient panel splitting, and fast rendering.
 
