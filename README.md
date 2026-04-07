@@ -100,8 +100,8 @@ python3 cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-
 ```
 
 #### Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
-
-#### `--2bit` will add higher resolution xtch files 
+#### `--2bit` will add higher resolution xtch files
+#### `--rtl` for Japanase manga. `--ltr` for Comics 
 
 ---
 
