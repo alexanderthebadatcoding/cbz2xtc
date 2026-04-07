@@ -1,3 +1,28 @@
+# XTEink Manga Tools 
+
+A comprehensive suite of tools for converting various media formats (CBZ, PDF, images, webpages, and videos) into the highly optimized XTC/XTCH format specifically designed for the XTEink X4 e-reader.
+
+These tools are designed to maximize the reading experience on e-ink displays by offering advanced dithering, efficient panel splitting, and fast rendering.
+
+## Key Features
+- **Multi-format Support:** Convert from archives (CBZ), documents (PDF), websites, videos, and raw images.
+- **Smart Formatting:** Auto-split landscape spreads into portrait panels, generate overviews, and support long-strip manhwa/webtoon scrolling.
+- **E-ink Optimization:** Multiple dithering algorithms for e-ink limited bit depth.
+- **High Performance:** Utilizes NumPy, Numba, and parallel processing for fast conversions.
+- **Space Saving:** Optional LZ4 compression (`.xtcz`).
+
+---
+
+## The Tools
+
+### `cbz2xtc.py`
+Processes multiple pages and files in parallel. Ideal for standard manga and comic archives.
+- **Split segments**: Automatically cuts landscape spreads into upright portrait pieces.
+- **Overviews**: Generates full-page views to show the layout before the splits.
+- **Fast Encoding**: Uses NumPy to process images quickly.
+
+### `cbz2xtcpoppler.py`
+An alternative PDF converter that uses Poppler for potentially better rendering on complex PDFs.
 ## Installation
 
 Install the required Python libraries:
