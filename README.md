@@ -113,8 +113,7 @@ python3 cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-
 | `--2bit` | Use 4-level grayscale (higher quality). Recommended for detailed artwork. |
 | `--compress` | Compress output using LZ4 into an `.xtcz` file (saves storage space). |
 | `--downscale <filter>` | Downscaling filter: `bicubic` (default), `bilinear`, `box`. |
-| `--manhwa <overlap>` | Use long-strip mode (default 40% overlap) for webtoons (cbz/web only). |
-
+| `--manhwa <overlap>` | Use long-strip mode (default 40% overlap) for webtoons (cbz only). |
 | `--include-overviews` | Add an upright full-page preview before segments. |
 | `--sideways-overviews` | Add a rotated full-page preview (-90 degrees). |
 | `--gamma <value>` | Brighten/Darken the image. Use `<1` to brighten and `>1` to darken (Default: 1). |
