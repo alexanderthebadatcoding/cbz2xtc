@@ -82,34 +82,6 @@ python cbz2xtc.py <options>
 python3 cbz2xtc.py <options>
 ```
 
-
----
-
-## Options Reference
-
-### General Options (`cbz2xtc`, `web2xtc`, `video2xtc`, and `image2xth`)
-| Option | Effect |
-| :--- | :--- |
-| `--2bit` | Use 4-level grayscale (higher quality). Recommended for detailed artwork. |
-| `--compress` | Compress output using LZ4 into an `.xtcz` file (saves storage space). |
-| `--downscale <filter>` | Downscaling filter: `bicubic` (default), `bilinear`, `box`. |
-| `--manhwa <overlap>` | Use long-strip mode (default 40% overlap) for webtoons (cbz/web only). |
-| `--landscape-page-split <mode>`| Split wide pages into 3 pieces. Use `rtl` for Japanese manga (starts right), `ltr` for western. |
-| `--hsplit-count <#>` | Split upright pages into this many columns. Pieces rotate automatically based on display ratio. |
-| `--hsplit-overlap <float>` | Horizontal overlap percentage between columns (Default: 70). |
-| `--vsplit-count <#>` | Split upright pages into this many rows. Scales seamlessly with `hsplit` for perfect zero-padding grids. |
-| `--vsplit-overlap <float>` | Vertical overlap percentage between rows (Default: 5). |
-| `--include-overviews` | Add an upright full-page preview before segments. |
-| `--sideways-overviews` | Add a rotated full-page preview (-90 degrees). |
-| `--gamma <value>` | Brighten/Darken the image. Use `<1` to brighten and `>1` to darken (Default: 1). |
-| `--clean` | Delete temporary files after the conversion is done. |
-| `--dither <algorithm>` | Dithering method: `stucki`(default), `atkinson`, `ostromoukhov`,`contrast-aware` `zhoufang`(recommended for e-ink), `stochastic`, `floyd`, `ordered`, `none`. |
-
-
-Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
-
-`--2bit` will add higher resolution xtch files 
-
 ### Method 1: OpenCV (Default)
 
 Fast contour-based detection using traditional computer vision. No extra model files are needed.
@@ -124,8 +96,12 @@ python3 cbz2xtc.py --dither zhoufang --downscale lanczos --panel --rtl --2bit
 AI-based detection using YOLO. This requires a model file.
 
 ```bash
-./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
+python3 cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
 ```
+
+### Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
+
+### `--2bit` will add higher resolution xtch files 
 
 ---
 
@@ -138,19 +114,14 @@ AI-based detection using YOLO. This requires a model file.
 | `--compress` | Compress output using LZ4 into an `.xtcz` file (saves storage space). |
 | `--downscale <filter>` | Downscaling filter: `bicubic` (default), `bilinear`, `box`. |
 | `--manhwa <overlap>` | Use long-strip mode (default 40% overlap) for webtoons (cbz/web only). |
-| `--landscape-page-split <mode>`| Split wide pages into 3 pieces. Use `rtl` for Japanese manga (starts right), `ltr` for western. |
-| `--hsplit-count <#>` | Split upright pages into this many columns. Pieces rotate automatically based on display ratio. |
-| `--hsplit-overlap <float>` | Horizontal overlap percentage between columns (Default: 70). |
-| `--vsplit-count <#>` | Split upright pages into this many rows. Scales seamlessly with `hsplit` for perfect zero-padding grids. |
-| `--vsplit-overlap <float>` | Vertical overlap percentage between rows (Default: 5). |
+
 | `--include-overviews` | Add an upright full-page preview before segments. |
 | `--sideways-overviews` | Add a rotated full-page preview (-90 degrees). |
 | `--gamma <value>` | Brighten/Darken the image. Use `<1` to brighten and `>1` to darken (Default: 1). |
 | `--clean` | Delete temporary files after the conversion is done. |
 | `--dither <algorithm>` | Dithering method: `stucki`(default), `atkinson`, `ostromoukhov`,`contrast-aware` `zhoufang`(recommended for e-ink), `stochastic`, `floyd`, `ordered`, `none`. |
-
-- **`--panel-conf <0.0-1.0>`**: Set the confidence threshold (default: `0.40`). Use `0.6` or `0.7` to reduce duplicate detections of the same panel.
-- **`--rtl`**: Enable Right-to-Left panel sorting (standard for Japanese manga).
+| `--panel-conf <0.0-1.0>` | Set the confidence threshold (default: `0.40`). Use `0.6` or `0.7` to reduce duplicate detections of the same panel. |
+| `--rtl` | Enable Right-to-Left panel sorting (standard for Japanese manga). |
 
 ## Finding Models
 
