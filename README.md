@@ -65,10 +65,46 @@ Then run
 ```bash
 pip install -r requirements.txt
 ```
---
+---
+## How to Run
 
-## Usage
-Place your PDF or CBZ files in the main folder. It will detect them and create an export folder.
+1. Place your source files (`.cbz`, `.pdf`, `.png`, etc.) in the main folder.
+2. Open your terminal in that folder.
+3. Run the appropriate script:
+
+**Windows**:
+```cmd
+python cbz2xtc.py <options>
+```
+
+**macOS / Linux**:
+```bash
+python3 cbz2xtc.py <options>
+```
+
+
+---
+
+## Options Reference
+
+### General Options (`cbz2xtc`, `web2xtc`, `video2xtc`, and `image2xth`)
+| Option | Effect |
+| :--- | :--- |
+| `--2bit` | Use 4-level grayscale (higher quality). Recommended for detailed artwork. |
+| `--compress` | Compress output using LZ4 into an `.xtcz` file (saves storage space). |
+| `--downscale <filter>` | Downscaling filter: `bicubic` (default), `bilinear`, `box`. |
+| `--manhwa <overlap>` | Use long-strip mode (default 40% overlap) for webtoons (cbz/web only). |
+| `--landscape-page-split <mode>`| Split wide pages into 3 pieces. Use `rtl` for Japanese manga (starts right), `ltr` for western. |
+| `--hsplit-count <#>` | Split upright pages into this many columns. Pieces rotate automatically based on display ratio. |
+| `--hsplit-overlap <float>` | Horizontal overlap percentage between columns (Default: 70). |
+| `--vsplit-count <#>` | Split upright pages into this many rows. Scales seamlessly with `hsplit` for perfect zero-padding grids. |
+| `--vsplit-overlap <float>` | Vertical overlap percentage between rows (Default: 5). |
+| `--include-overviews` | Add an upright full-page preview before segments. |
+| `--sideways-overviews` | Add a rotated full-page preview (-90 degrees). |
+| `--gamma <value>` | Brighten/Darken the image. Use `<1` to brighten and `>1` to darken (Default: 1). |
+| `--clean` | Delete temporary files after the conversion is done. |
+| `--dither <algorithm>` | Dithering method: `stucki`(default), `atkinson`, `ostromoukhov`,`contrast-aware` `zhoufang`(recommended for e-ink), `stochastic`, `floyd`, `ordered`, `none`. |
+
 
 Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
 
@@ -78,10 +114,7 @@ Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` 
 
 Fast contour-based detection using traditional computer vision. No extra model files are needed.
 
-```bash
-./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --rtl
-```
-or try
+
 ```bash
 python3 cbz2xtc.py --dither zhoufang --downscale lanczos --panel --rtl --2bit
 ```
@@ -93,11 +126,28 @@ AI-based detection using YOLO. This requires a model file.
 ```bash
 ./cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
 ```
-or
 
+---
 
+## Options Reference
 
-## Advanced Options
+### General Options
+| Option | Effect |
+| :--- | :--- |
+| `--2bit` | Use 4-level grayscale (higher quality). Recommended for detailed artwork. |
+| `--compress` | Compress output using LZ4 into an `.xtcz` file (saves storage space). |
+| `--downscale <filter>` | Downscaling filter: `bicubic` (default), `bilinear`, `box`. |
+| `--manhwa <overlap>` | Use long-strip mode (default 40% overlap) for webtoons (cbz/web only). |
+| `--landscape-page-split <mode>`| Split wide pages into 3 pieces. Use `rtl` for Japanese manga (starts right), `ltr` for western. |
+| `--hsplit-count <#>` | Split upright pages into this many columns. Pieces rotate automatically based on display ratio. |
+| `--hsplit-overlap <float>` | Horizontal overlap percentage between columns (Default: 70). |
+| `--vsplit-count <#>` | Split upright pages into this many rows. Scales seamlessly with `hsplit` for perfect zero-padding grids. |
+| `--vsplit-overlap <float>` | Vertical overlap percentage between rows (Default: 5). |
+| `--include-overviews` | Add an upright full-page preview before segments. |
+| `--sideways-overviews` | Add a rotated full-page preview (-90 degrees). |
+| `--gamma <value>` | Brighten/Darken the image. Use `<1` to brighten and `>1` to darken (Default: 1). |
+| `--clean` | Delete temporary files after the conversion is done. |
+| `--dither <algorithm>` | Dithering method: `stucki`(default), `atkinson`, `ostromoukhov`,`contrast-aware` `zhoufang`(recommended for e-ink), `stochastic`, `floyd`, `ordered`, `none`. |
 
 - **`--panel-conf <0.0-1.0>`**: Set the confidence threshold (default: `0.40`). Use `0.6` or `0.7` to reduce duplicate detections of the same panel.
 - **`--rtl`**: Enable Right-to-Left panel sorting (standard for Japanese manga).
