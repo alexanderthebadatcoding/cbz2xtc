@@ -6,7 +6,7 @@ If you have images of the comics or manga you can zip the folder snd change thr 
 These tools are designed to maximize the reading experience on e-ink displays by offering advanced dithering, efficient panel splitting, and fast rendering.
 
 ## Key Features
-- **Multi-format Support:** Convert from archives (CBZ), documents (PDF), websites, videos, and raw images.
+- **Multi-format Support:** Convert from archives (CBZ), documents (PDF), images.
 - **Smart Formatting:** Auto-split landscape spreads into portrait panels, generate overviews, and support long-strip manhwa/webtoon scrolling.
 - **E-ink Optimization:** Multiple dithering algorithms for e-ink limited bit depth.
 - **High Performance:** Utilizes NumPy, Numba, and parallel processing for fast conversions.
@@ -65,6 +65,7 @@ Then run
 ```bash
 pip install -r requirements.txt
 ```
+--
 
 ## Usage
 Place your PDF or CBZ files in the main folder. It will detect them and create an export folder.
