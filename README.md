@@ -23,9 +23,19 @@ Processes multiple pages and files in parallel. Ideal for standard manga and com
 
 ### `cbz2xtcpoppler.py`
 An alternative PDF converter that uses Poppler for potentially better rendering on complex PDFs.
+
+---
+
 ## Installation
 
-Install the required Python libraries:
+### 1. Install Python
+Ensure Python 3 is installed on your system.
+- **Windows**: Download from [python.org](https://www.python.org/). *Crucial: During installation, ensure you check "Add Python to PATH".*
+- **macOS**: Run `brew install python` or download from [python.org](https://www.python.org/).
+- **Linux**: Usually pre-installed. If not, use `sudo apt install python3 python3-pip`.
+
+### 2. Install Required Libraries
+Open your terminal (Command Prompt/PowerShell on Windows, Terminal on macOS/Linux) and run:
 
 ```bash
 pip install pillow numpy opencv-python ultralytics requests pymupdf numba
@@ -48,7 +58,7 @@ brew install pillow numpy opencv-python ultralytics requests pymupdf numba
 First, ensure you have Python and pip installed.
 Then consider using a virtual environment:
 ```bash
-python -m venv venv && source venv/bin/activate
+python3 -m venv venv && source venv/bin/activate
 ```
 Then run
 ```bash
