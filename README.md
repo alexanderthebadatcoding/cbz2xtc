@@ -99,9 +99,9 @@ AI-based detection using YOLO. This requires a model file.
 python3 cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
 ```
 
-### Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
+#### Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
 
-### `--2bit` will add higher resolution xtch files 
+#### `--2bit` will add higher resolution xtch files 
 
 ---
 
