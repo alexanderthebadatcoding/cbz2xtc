@@ -1,4 +1,4 @@
-# XTEink Manga Tools 
+# XTEink Manga Tools
 
 A comprehensive suite of tools for converting various media formats (CBZ, PDF, and images) into the highly optimized XTC/XTCH format specifically designed for the XTEink X4 e-reader.
 If you have images of the comics or manga you can zip the folder snd change thr extension from .zip to .cbz
@@ -6,6 +6,7 @@ If you have images of the comics or manga you can zip the folder snd change thr 
 These tools are designed to maximize the reading experience on e-ink displays by offering advanced dithering, efficient panel splitting, and fast rendering.
 
 ## Key Features
+
 - **Multi-format Support:** Convert from archives (CBZ), documents (PDF), images.
 - **Smart Formatting:** Auto-split landscape spreads into portrait panels, generate overviews, and support long-strip manhwa/webtoon scrolling.
 - **E-ink Optimization:** Multiple dithering algorithms for e-ink limited bit depth.
@@ -17,12 +18,15 @@ These tools are designed to maximize the reading experience on e-ink displays by
 ## The Tools
 
 ### `cbz2xtc.py`
+
 Processes multiple pages and files in parallel. Ideal for standard manga and comic archives.
+
 - **Split segments**: Automatically cuts landscape spreads into upright portrait pieces.
 - **Overviews**: Generates full-page views to show the layout before the splits.
 - **Fast Encoding**: Uses NumPy to process images quickly.
 
 ### `cbz2xtcpoppler.py`
+
 An alternative PDF converter that uses Poppler for potentially better rendering on complex PDFs.
 
 ---
@@ -30,12 +34,15 @@ An alternative PDF converter that uses Poppler for potentially better rendering 
 ## Installation
 
 ### 1. Install Python
+
 Ensure Python 3 is installed on your system.
+
 - **Windows**: Download from [python.org](https://www.python.org/). *Crucial: During installation, ensure you check "Add Python to PATH".*
 - **macOS**: Run `brew install python` or download from [python.org](https://www.python.org/).
 - **Linux**: Usually pre-installed. If not, use `sudo apt install python3 python3-pip`.
 
 ### 2. Install Required Libraries
+
 Open your terminal (Command Prompt/PowerShell on Windows, Terminal on macOS/Linux) and run:
 
 ```bash
@@ -54,30 +61,39 @@ If you have issues on mac try:
 brew install pillow numpy opencv-python ultralytics requests pymupdf numba
 ```
 
-### (Optional) If you encounter any issues with pip install:
+### (Optional) If you encounter any issues with pip install
 
 First, ensure you have Python and pip installed.
 Then consider using a virtual environment:
+
 ```bash
 python3 -m venv venv && source venv/bin/activate
 ```
+
 Then run
+
 ```bash
 pip install -r requirements.txt
 ```
+
 ---
+
 ## How to Run
+
+Download this code buy clicking onthe code button and download zip.
 
 1. Place your source files (`.cbz`, `.pdf`, `.png`, etc.) in the main folder.
 2. Open your terminal in that folder.
 3. Run the appropriate script:
 
 **Windows**:
+
 ```cmd
 python cbz2xtc.py <options>
 ```
 
 **macOS / Linux**:
+
 ```bash
 python3 cbz2xtc.py <options>
 ```
@@ -85,7 +101,6 @@ python3 cbz2xtc.py <options>
 ### Method 1: OpenCV (Default)
 
 Fast contour-based detection using traditional computer vision. No extra model files are needed.
-
 
 ```bash
 python3 cbz2xtc.py --dither zhoufang --downscale lanczos --panel --rtl --2bit
@@ -99,15 +114,18 @@ AI-based detection using YOLO. This requires a model file.
 python3 cbz2xtc.py --2bit --dither zhoufang --downscale lanczos --panel --panel-model manga_panel_detector_fp32.pt --rtl
 ```
 
-#### Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command.
+#### Panel extraction is triggered by adding the `--panel` flag to your `cbz2xtc.py` command
+
 #### `--2bit` will add higher resolution xtch files
-#### `--rtl` for Japanase manga. `--ltr` for Comics 
+
+#### `--rtl` for Japanase manga. `--ltr` for Comics
 
 ---
 
 ## Options Reference
 
 ### General Options
+
 | Option | Effect |
 | :--- | :--- |
 | `--2bit` | Use 4-level grayscale (higher quality). Recommended for detailed artwork. |

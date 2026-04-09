@@ -5,5 +5,4 @@ panelbypanel/.DS_Store
 *.pdf
 /.temp_png
 *.cbz
-/xtc_output
 /__pycache__
