@@ -82,9 +82,9 @@ pip install -r requirements.txt
 
 <img width="442" height="386" alt="Screenshot 2026-04-09 at 10 37 48 AM" src="https://github.com/user-attachments/assets/29dc0a4b-99c0-4cda-89c3-76fc71c4da7f" />
 
-### Download this code buy clicking onthe code button and download zip.
+### Download this code buy clicking on the code button and download zip.
 
-1. Place your source files (`.cbz`, `.pdf`, `.png`, etc.) in the main folder.
+1. Place your source files (`.cbz`, `.pdf`, `.png`, etc.) in the main extracted folder.
 2. Open your terminal in that folder.
 3. Run the appropriate script:
 
